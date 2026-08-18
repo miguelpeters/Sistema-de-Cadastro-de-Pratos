@@ -1,9 +1,16 @@
-CREATE DATABASE cadastro_pratos;
-USE cadastro_pratos;
+CREATE DATABASE IF NOT EXISTS pratos_db;
+USE pratos_db;
 
-CREATE TABLE pratos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(200) NOT NULL,
-    usuario VARCHAR(100)NOT NULL,
-    preco DECIMAL(10, 2) NOT NULL
+CREATE TABLE usuarios(
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE pratos(
+    id_prato INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    descricao VARCHAR(150) NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+    categoria VARCHAR(150) NOT NULL
 );
