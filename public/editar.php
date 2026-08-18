@@ -1,55 +1,148 @@
 <?php
 
-include "../infra/conexao.php";
+require_once "../infra/conexao.php";
 
-$id = $_GET["id"];
-$sql = "SELECT * FROM prato WHERE id = $id";
-$resultado = mysqli_query($conexao, $sql );
+$id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 
-$prato =mysqli_fetch_assoc($resultado);
+if (!$id) {
+    header("Location: ../index.php");
+    exit;
+}
 
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $nome = trim($_POST["nome"] ?? "");
+    $descricao = trim($_POST["descricao"] ?? "");
+    $preco = $_POST["preco"] ?? "";
+    $categoria = trim($_POST["categoria"] ?? "");
+
+    if ($nome === "" || $descricao === "" || $preco === "" || $categoria === "") {
+        die("Todos os campos são obrigatórios.");
+    }
+
+    $sql = "UPDATE prato
+            SET nome = ?, descricao = ?, preco = ?, categoria = ?
+            WHERE id = ?";
+
+    $stmt = $conexao->prepare($sql);
+
+    if (!$stmt) {
+        die("Erro ao preparar atualização: " . $conexao->error);
+    }
+
+    $stmt->bind_param(
+        "ssdsi",
+        $nome,
+        $descricao,
+        $preco,
+        $categoria,
+        $id
+    );
+
+    if (!$stmt->execute()) {
+        die("Erro ao atualizar prato: " . $stmt->error);
+    }
+
+    $stmt->close();
+    $conexao->close();
+
+    header("Location: ../index.php");
+    exit;
+}
+
+$sql = "SELECT * FROM prato WHERE id = ?";
+
+$stmt = $conexao->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$resultado = $stmt->get_result();
+$prato = $resultado->fetch_assoc();
+
+$stmt->close();
+
+if (!$prato) {
+    die("Prato não encontrado.");
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD - Livraria</title>
-    <link rel="stylesheet" href="style/styles.css">
+
+    <title>Editar Prato</title>
+
+    <link rel="stylesheet" href="../style/styles.css">
 </head>
 
 <body>
-    <header>
-        <h1>CRUD - Livraria</h1>
-    </header>
-    <main>
-        <h2>Editando o livro <?php echo $livro["titulo"]?>!</h2>
-        <form action="atualizar.php" method="POST">
-            <input type="hidden" name="id" value="<?php echo $prato["id"]?>">
 
-            <label for="titulo">Título:</label>
-            <input type="text" name="nome" value="<?php echo $prato["nome"]?>">
-            <br>
-            <label for="descricao">Descrição:</label>
-            <input type="text" name="descricao" value="<?php echo $prato["descricao"]?>">
-            <br>
-            <label for="preco">Preço:</label>
-            <input type="number" name="preco" value="<?php echo $prato["preco"]?>" step="0.01">
-            <br>
-            <label for="categoria">Categoria:</label>
-            <input type="text" name="categoria" value="<?php echo $prato["categoria"]?>">
-            <br>
-            <button type="submit">Atualizar</button>
-        </form>
+<header>
+    <h1>Editar Prato</h1>
+</header>
 
-    </main>
-    <footer>
+<main>
 
-    </footer>
+    <h2>Editar prato</h2>
 
+    <form method="POST">
+
+        <label for="nome">Nome:</label>
+        <input
+            type="text"
+            id="nome"
+            name="nome"
+            value="<?= htmlspecialchars($prato["nome"]) ?>"
+            required
+        >
+
+        <br>
+
+        <label for="descricao">Descrição:</label>
+        <input
+            type="text"
+            id="descricao"
+            name="descricao"
+            value="<?= htmlspecialchars($prato["descricao"]) ?>"
+            required
+        >
+
+        <br>
+
+        <label for="preco">Preço:</label>
+        <input
+            type="number"
+            id="preco"
+            name="preco"
+            step="0.01"
+            min="0"
+            value="<?= htmlspecialchars($prato["preco"]) ?>"
+            required
+        >
+
+        <br>
+
+        <label for="categoria">Categoria:</label>
+        <input
+            type="text"
+            id="categoria"
+            name="categoria"
+            value="<?= htmlspecialchars($prato["categoria"]) ?>"
+            required
+        >
+
+        <br>
+
+        <button type="submit">Salvar alterações</button>
+
+        <a href="../index.php">Cancelar</a>
+
+    </form>
+
+</main>
 
 </body>
-
 </html>
