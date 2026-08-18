@@ -3,10 +3,10 @@
 include "../infra/conexao.php";
 
 $id = $_GET["id"];
-$sql = "SELECT * FROM livros WHERE id = $id";
+$sql = "SELECT * FROM prato WHERE id = $id";
 $resultado = mysqli_query($conexao, $sql );
 
-$livro =mysqli_fetch_assoc($resultado);
+$prato =mysqli_fetch_assoc($resultado);
 
 ?>
 
@@ -27,16 +27,19 @@ $livro =mysqli_fetch_assoc($resultado);
     <main>
         <h2>Editando o livro <?php echo $livro["titulo"]?>!</h2>
         <form action="atualizar.php" method="POST">
-            <input type="hidden" name="id" value="<?php echo $livro["id"]?>">
+            <input type="hidden" name="id" value="<?php echo $prato["id"]?>">
 
             <label for="titulo">Título:</label>
-            <input type="text" name="titulo" value="<?php echo $livro["titulo"]?>">
+            <input type="text" name="nome" value="<?php echo $prato["nome"]?>">
             <br>
-            <label for="autor">Autor:</label>
-            <input type="text" name="autor" value="<?php echo $livro["autor"]?>">
+            <label for="descricao">Descrição:</label>
+            <input type="text" name="descricao" value="<?php echo $prato["descricao"]?>">
             <br>
-            <label for="ano">Ano de Publicação:</label>
-            <input type="number" name="ano" value="<?php echo $livro["ano"]?>">
+            <label for="preco">Preço:</label>
+            <input type="number" name="preco" value="<?php echo $prato["preco"]?>" step="0.01">
+            <br>
+            <label for="categoria">Categoria:</label>
+            <input type="text" name="categoria" value="<?php echo $prato["categoria"]?>">
             <br>
             <button type="submit">Atualizar</button>
         </form>

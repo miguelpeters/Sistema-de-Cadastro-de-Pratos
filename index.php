@@ -1,7 +1,7 @@
 <?php
 
 include "infra/conexao.php";
-$livros = mysqli_query($conexao, "SELECT * FROM livros");
+$prato = mysqli_query($conexao, "SELECT * FROM prato");
 
 ?>
 
@@ -20,38 +20,41 @@ $livros = mysqli_query($conexao, "SELECT * FROM livros");
         <h1>CRUD - Livraria</h1>
     </header>
     <main>
-        <h2>Adicione um novo livro!</h2>
+        <h2>Adicione um novo prato!</h2>
         <form action="public/cadastrar.php" method="POST">
-            <label for="titulo">Título:</label>
-            <input type="text" name="titulo">
+            <label for="nome">Nome:</label>
+            <input type="text" name="nome">
             <br>
-            <label for="autor">Autor:</label>
-            <input type="text" name="autor">
+            <label for="descricao">Descrição:</label>
+            <input type="text" name="descricao">
             <br>
-            <label for="ano">Ano de Publicação:</label>
-            <input type="number" name="ano">
+            <label for="preco">Preço:</label>
+            <input type="number" name="preco" step="0.01">
+            <br>
+            <label for="categoria">Categoria:</label>
+            <input type="text" name="categoria">
             <br>
             <button type="submit">Cadastrar</button>
         </form>
         <div>
-            <h2>Livros Cadastrados</h2>
+            <h2>Pratos Cadastrados</h2>
             <table>
                 <tr>
                     <th>ID</th>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Ano</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Preço</th>
                     <th>Ações</th>
                 </tr>
-                <?php while ($livro = mysqli_fetch_assoc($livros)) { ?>
+                <?php while ($prato = mysqli_fetch_assoc($prato)) { ?>
                     <tr>
-                        <td><?php echo $livro["id"] ?></td>
-                        <td><?php echo $livro["titulo"] ?></td>
-                        <td><?php echo $livro["autor"] ?></td>
-                        <td><?php echo $livro["ano"] ?></td>
+                        <td><?php echo $prato["id"] ?></td>
+                        <td><?php echo $prato["nome"] ?></td>
+                        <td><?php echo $prato["descricao"] ?></td>
+                        <td><?php echo $prato["preco"] ?></td>
                         <td>
-                            <a href="public/editar.php?id=<?php echo $livro["id"] ?>">Editar</a>
-                            <a href="public/excluir.php?id=<?php echo $livro["id"] ?>">Excluir</a>
+                            <a href="public/editar.php?id=<?php echo $prato["id"] ?>">Editar</a>
+                            <a href="public/excluir.php?id=<?php echo $prato["id"] ?>">Excluir</a>
                         </td>
                     </tr>
                 <?php } ?>
