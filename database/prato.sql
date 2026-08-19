@@ -1,13 +1,14 @@
-CREATE DATABASE IF NOT EXISTS pratos_db
+CREATE DATABASE IF NOT EXISTS prato_db
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE pratos_db;
+USE prato_db;
 
 CREATE TABLE IF NOT EXISTS usuario (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL
+    senha VARCHAR(255) NOT NULL;
 );
 
 CREATE TABLE IF NOT EXISTS prato (
@@ -17,3 +18,17 @@ CREATE TABLE IF NOT EXISTS prato (
     preco DECIMAL(10,2) NOT NULL,
     categoria VARCHAR(150) NOT NULL
 );
+
+ALTER TABLE usuario
+ADD COLUMN senha VARCHAR(255) NOT NULL;
+
+ALTER TABLE usuario
+ADD CONSTRAINT uq_usuario_email UNIQUE (email);
+
+ALTER TABLE prato
+ADD COLUMN id_usuario INT NOT NULL;
+
+ALTER TABLE prato
+ADD CONSTRAINT fk_prato_usuario
+FOREIGN KEY (id_usuario)
+REFERENCES usuario(id_usuario);

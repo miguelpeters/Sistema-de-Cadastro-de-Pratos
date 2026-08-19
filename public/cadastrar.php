@@ -41,4 +41,14 @@ $stmt->close();
 $conexao->close();
 
 header("Location: ../index.php");
+
+session_start();
+
+require_once "../infra/conexao.php";
+
+if (!isset($_SESSION["id_usuario"])) {
+
+
+    header("Location: ../login.php");
+}
 exit;

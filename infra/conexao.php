@@ -1,9 +1,9 @@
 <?php
 
 $host = "localhost";
-$usuario = "root";
+$usuario = "root.";
 $senha = "root";
-$banco = "pratos_db";
+$banco = "prato_db";
 
 $conexao = new mysqli($host, $usuario, $senha, $banco);
 

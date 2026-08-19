@@ -1,4 +1,25 @@
 <?php
+session_start();
+?>
+
+<?php if (isset($_SESSION["id_usuario"])): ?>
+
+    <p>
+        Olá,
+        <strong>
+            <?= htmlspecialchars($_SESSION["nome_usuario"]) ?>
+        </strong>
+    </p>
+
+    <a href="logout.php">Sair</a>
+
+<?php else: ?>
+
+    <a href="login.php">Entrar</a>
+
+<?php endif; ?>
+
+<?php
 
 require_once "infra/conexao.php";
 
@@ -12,7 +33,21 @@ if (!$resultado) {
     die("Erro ao buscar pratos: " . $conexao->error);
 }
 
+$sql = "
+    SELECT
+        prato.id,
+        prato.nome,
+        prato.descricao,
+        prato.preco,
+        prato.categoria,
+        usuario.nome AS nome_usuario
+    FROM prato
+    INNER JOIN usuario
+        ON prato.id_usuario = usuario.id_usuario
+    ORDER BY prato.id DESC
+";
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -66,6 +101,25 @@ if (!$resultado) {
                 <input type="text" id="categoria" name="categoria" required>
 
                 <br>
+
+                <?php while ($prato = $resultado->fetch_assoc()): ?>
+
+                    <div class="prato">
+
+                        <h2><?= htmlspecialchars($prato["nome"]) ?></h2>
+
+                        <p><?= htmlspecialchars($prato["descricao"]) ?></p>
+
+                        <p>R$ <?= htmlspecialchars($prato["preco"]) ?></p>
+
+                        <p>
+                            Cadastrado por:
+                            <strong><?= htmlspecialchars($prato["nome_usuario"]) ?></strong>
+                        </p>
+
+                    </div>
+
+                <?php endwhile; ?>
 
                 <button type="submit">
                     Cadastrar
