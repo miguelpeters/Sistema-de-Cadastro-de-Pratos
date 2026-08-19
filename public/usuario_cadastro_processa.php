@@ -14,16 +14,16 @@ $sql = "INSERT INTO usuario (nome, email) VALUES (?, ?)";
 $stmt = $conexao->prepare($sql);
 
 if (!$stmt) {
-    die("Erro ao preparar cadastro: " . $conexao->error);
+    die("Erro ao preparar o cadastro: " . $conexao->error);
 }
 
 $stmt->bind_param("ss", $nome, $email);
 
 if ($stmt->execute()) {
-    echo "Usuário cadastrado com sucesso!";
-    echo "<br><a href='usuario_cadastro.php'>Cadastrar outro usuário</a>";
+    header("Location: ../index.php");
+    exit;
 } else {
-    echo "Erro ao cadastrar usuário: " . $stmt->error;
+    die("Erro ao cadastrar usuário: " . $stmt->error);
 }
 
 $stmt->close();

@@ -35,41 +35,66 @@ if (!$resultado) {
         <h1>Sistema de Cadastro de Pratos</h1>
     </header>
 
+<nav>
+    <a href="public/usuario_cadastro.php" class="botao">
+        Cadastrar Usuário
+    </a>
+</nav>
+
     <main>
 
         <section>
 
             <h2>Adicione um novo prato!</h2>
 
-            <form action="public/cadastrar.php" method="POST">
+           <form action="public/cadastrar.php" method="POST">
 
-                <label for="nome">Nome:</label>
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required>
 
-                <input type="text" id="nome" name="nome" required>
+    <br>
 
-                <br>
+    <label for="descricao">Descrição:</label>
+    <input type="text" id="descricao" name="descricao" required>
 
-                <label for="descricao">Descrição:</label>
+    <br>
 
-                <input type="text" id="descricao" name="descricao" required>
+    <label for="preco">Preço:</label>
+    <input type="number" id="preco" name="preco" step="0.01" min="0" required>
 
-                <br>
+    <br>
 
-                <label for="preco">Preço:</label>
+    <label for="categoria">Categoria:</label>
+    <input type="text" id="categoria" name="categoria" required>
 
-                <input type="number" id="preco" name="preco" step="0.01" min="0" required>
+    <br>
 
-                <br>
+    <label for="id_usuario">Usuário responsável:</label>
 
-                <label for="categoria">Categoria:</label>
+    <select id="id_usuario" name="id_usuario" required>
+        <option value="">Selecione um usuário</option>
 
-                <input type="text" id="categoria" name="categoria" required>
+        <?php
+        $usuarios = $conexao->query(
+            "SELECT id_usuario, nome FROM usuario ORDER BY nome"
+        );
 
-                <br>
+        while ($usuario = $usuarios->fetch_assoc()):
+        ?>
 
-                <button type="submit">
-                    Cadastrar
-                </button>
+            <option value="<?= $usuario["id_usuario"] ?>">
+                <?= htmlspecialchars($usuario["nome"]) ?>
+            </option>
+
+        <?php endwhile; ?>
+
+    </select>
+
+    <br>
+
+    <button type="submit">
+        Cadastrar
+    </button>
 
             </form>
 
